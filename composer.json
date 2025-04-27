@@ -34,7 +34,7 @@
     },
     "scripts": {
         "format": "vendor/bin/pint",
-        "post-install-cmd": [
+        "post-package-install": [
             "@php artisan vendor:publish --provider=\"Spatie\\Permission\\PermissionServiceProvider\" --tag=\"permission-migrations\""
         ]
     },
