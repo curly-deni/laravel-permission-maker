@@ -1,78 +1,104 @@
-# This is my package laravel-permission-maker
+# Laravel Permission Maker
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/curly-deni/laravel-permission-maker.svg?style=flat-square)](https://packagist.org/packages/curly-deni/laravel-permission-maker)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/curly-deni/laravel-permission-maker/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/curly-deni/laravel-permission-maker/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/curly-deni/laravel-permission-maker/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/curly-deni/laravel-permission-maker/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/curly-deni/laravel-permission-maker.svg?style=flat-square)](https://packagist.org/packages/curly-deni/laravel-permission-maker)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+**Laravel Permission Maker** is a simple extension for [spatie/laravel-permission](https://github.com/spatie/laravel-permission) that automates the creation of migrations for permissions.  
+Easily generate CRUD permissions or single permissions directly from Artisan commands.
 
-## Support us
+## Features
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-permission-maker.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-permission-maker)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+- 🔥 Quickly scaffold CRUD permissions for any resource.
+- ✍️ Create a migration for a single permission with one command.
+- 📦 Compatible with [spatie/laravel-permission](https://github.com/spatie/laravel-permission).
+- 🚀 Clean, minimalistic, and developer-friendly.
+- 🛠️ Customizable stub templates for advanced usage.
 
 ## Installation
 
-You can install the package via composer:
+Install the package via Composer:
 
 ```bash
 composer require curly-deni/laravel-permission-maker
 ```
 
-You can publish and run the migrations with:
+Ensure that the Spatie permission migrations are published and migrated:
 
 ```bash
-php artisan vendor:publish --tag="laravel-permission-maker-migrations"
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="permission-migrations"
 php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="laravel-permission-maker-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="laravel-permission-maker-views"
 ```
 
 ## Usage
 
-```php
-$permissionMaker = new Aesis\PermissionMaker();
-echo $permissionMaker->echoPhrase('Hello, Aesis!');
-```
+| Command                                | Description                                   | Options                              |
+|----------------------------------------|-----------------------------------------------|--------------------------------------|
+| `permission:commit-crud {resource}`    | Create a migration for CRUD permissions       | `--private` `--own`                  |
+| `permission:commit {name}`             | Create a migration for a single permission    | None                                 |
 
-## Testing
+---
+
+### 1. `permission:commit-crud`
+
+Generates standard CRUD permissions (`create`, `update`, `delete`, `read`) for a given resource.
 
 ```bash
-composer test
+php artisan permission:commit-crud {resource} {--private} {--own}
 ```
 
-## Changelog
+| Argument / Option | Description                                           |
+|-------------------|-------------------------------------------------------|
+| `resource`        | Resource name (preferably in `snake_case`)             |
+| `--private`       | Add `private_read` permission                         |
+| `--own`           | Add own permissions (`own_read`, `own_update`, `own_delete`) |
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+**Example:**
 
-## Contributing
+```bash
+php artisan permission:commit-crud blog_post --private --own
+```
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+Generated permissions:
 
-## Security Vulnerabilities
+```
+blog_post:create
+blog_post:update
+blog_post:delete
+blog_post:read
+blog_post:private_read
+blog_post:own_read
+blog_post:own_update
+blog_post:own_delete
+```
 
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
+---
+
+### 2. `permission:commit`
+
+Generates a migration for a single permission.
+
+```bash
+php artisan permission:commit {name}
+```
+
+| Argument | Description                        |
+|----------|------------------------------------|
+| `name`   | Permission name (e.g., `post:publish`) |
+
+**Example:**
+
+```bash
+php artisan permission:commit post:publish
+```
+
+Generated permission:
+
+```
+post:publish
+```
+
+---
 
 ## Credits
 
