@@ -12,7 +12,7 @@ if (! function_exists('getMigrationFileName')) {
 
         return Collection::make([app()->databasePath().DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR])
             ->flatMap(fn ($path) => $filesystem->glob($path.'*_'.$migrationFileName))
-            ->push(app() > databasePath()."/migrations/{$timestamp}_{$migrationFileName}")
+            ->push(app()->databasePath()."/migrations/{$timestamp}_{$migrationFileName}")
             ->first();
     }
 }
