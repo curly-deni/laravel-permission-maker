@@ -3,6 +3,7 @@
 namespace Aesis\PermissionMaker;
 
 use Aesis\PermissionMaker\Commands\CommitCRUD;
+use Aesis\PermissionMaker\Commands\CommitPermission;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -17,9 +18,7 @@ class PermissionMakerServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('laravel-permission-maker')
-//            ->hasConfigFile()
-//            ->hasViews()
-//            ->hasMigration('create_laravel_permission_maker_table')
-            ->hasCommand(CommitCRUD::class);
+            ->hasCommand(CommitCRUD::class)
+            ->hasCommand(CommitPermission::class);
     }
 }

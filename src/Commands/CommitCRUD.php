@@ -17,10 +17,10 @@ class CommitCRUD extends Command
     public function handle(): int
     {
         $resource = $this->argument('resource');
-        $private = (string) $this->option('private');
-        $own = (string) $this->option('own');
+        $private = (string) (int) $this->option('private');
+        $own = (string) (int) $this->option('own');
 
-        $migrationFileName = getMigrationFileName('commit_'.$resource.'_crud_permissions.php');
+        $migrationFileName = getMigrationFileName('commit_'.$resource.'_crud_permissions'.($private ? '_with_private' : '').($own ? '_with_own' : '').'.php');
 
         $stub = File::get(__DIR__.'/../../database/migrations/crud_template.php.stub');
 

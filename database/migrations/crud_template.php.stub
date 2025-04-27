@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 
 return new class extends Migration
 {
@@ -11,25 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $permissions = ['{{resource}}:create', '{{resource}}:update', '{{resource}}:delete', '{{resource}}:read'];
-
-        if ({{private}}) {
-            $permissions[] = '{{resource}}:private_read';
-        }
-
-        if ({{own}}) {
-            $permissions = array_merge([
-                '{{resource}}:own_read',
-                '{{resource}}:own_update',
-                '{{resource}}:own_delete',
-            ], $permissions);
-        }
+        $permissions = $this->buildPermissions();
 
         foreach ($permissions as $permission) {
-            Permission::create($permission);
+            Permission::findOrCreate($permission);
         }
 
-        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 
     /**
@@ -37,27 +26,44 @@ return new class extends Migration
      */
     public function down(): void
     {
-        $permissions = ['{{resource}}:create', '{{resource}}:update', '{{resource}}:delete', '{{resource}}:read'];
+        $permissions = $this->buildPermissions();
+
+        foreach ($permissions as $permissionName) {
+            try {
+                $permission = Permission::findByName($permissionName);
+                $permission?->delete();
+            } catch (PermissionDoesNotExist $e) {
+                // Permission already deleted or does not exist
+            }
+        }
+
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+    }
+
+    /**
+     * Build the permission list based on resource and options.
+     */
+    private function buildPermissions(): array
+    {
+        $permissions = [
+            '{{resource}}:create',
+            '{{resource}}:update',
+            '{{resource}}:delete',
+            '{{resource}}:read',
+        ];
 
         if ({{private}}) {
             $permissions[] = '{{resource}}:private_read';
         }
 
         if ({{own}}) {
-            $permissions = array_merge([
+            array_unshift($permissions,
                 '{{resource}}:own_read',
                 '{{resource}}:own_update',
-                '{{resource}}:own_delete',
-            ], $permissions);
+                '{{resource}}:own_delete'
+            );
         }
 
-        foreach ($permissions as $permissionName) {
-            $permission = Permission::findByName($permissionName);
-            if ($permission) {
-                $permission->delete();
-            }
-        }
-
-        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        return $permissions;
     }
 };
