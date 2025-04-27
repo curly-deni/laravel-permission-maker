@@ -1,0 +1,63 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        $permissions = ['{{resource}}:create', '{{resource}}:update', '{{resource}}:delete', '{{resource}}:read'];
+
+        if ({{private}}) {
+            $permissions[] = '{{resource}}:private_read';
+        }
+
+        if ({{own}}) {
+            $permissions = array_merge([
+                '{{resource}}:own_read',
+                '{{resource}}:own_update',
+                '{{resource}}:own_delete',
+            ], $permissions);
+        }
+
+        foreach ($permissions as $permission) {
+            Permission::create($permission);
+        }
+
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        $permissions = ['{{resource}}:create', '{{resource}}:update', '{{resource}}:delete', '{{resource}}:read'];
+
+        if ({{private}}) {
+            $permissions[] = '{{resource}}:private_read';
+        }
+
+        if ({{own}}) {
+            $permissions = array_merge([
+                '{{resource}}:own_read',
+                '{{resource}}:own_update',
+                '{{resource}}:own_delete',
+            ], $permissions);
+        }
+
+        foreach ($permissions as $permissionName) {
+            $permission = Permission::findByName($permissionName);
+            if ($permission) {
+                $permission->delete();
+            }
+        }
+
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+    }
+};
