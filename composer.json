@@ -1,11 +1,7 @@
 {
     "name": "curly-deni/laravel-permission-maker",
-    "description": "This is my package laravel-permission-maker",
-    "keywords": [
-        "Danila Mikhalev",
-        "laravel",
-        "laravel-permission-maker"
-    ],
+    "description": "Laravel package to easily generate migration files for CRUD and single permissions based on spatie/laravel-permission.",
+    "keywords": ["laravel", "permissions", "spatie", "crud", "artisan", "generator", "authorization", "migration"],
     "homepage": "https://github.com/curly-deni/laravel-permission-maker",
     "license": "MIT",
     "authors": [
