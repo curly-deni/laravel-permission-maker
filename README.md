@@ -4,16 +4,16 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/curly-deni/laravel-permission-maker/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/curly-deni/laravel-permission-maker/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/curly-deni/laravel-permission-maker.svg?style=flat-square)](https://packagist.org/packages/curly-deni/laravel-permission-maker)
 
-**Laravel Permission Maker** is a simple extension for [spatie/laravel-permission](https://github.com/spatie/laravel-permission) that automates the creation of migrations for permissions.  
-Easily generate CRUD permissions or single permissions directly from Artisan commands.
+**Laravel Permission Maker** is a simple extension for [spatie/laravel-permission](https://github.com/spatie/laravel-permission) that automates the creation of permission migrations.  
+Quickly generate full CRUD permission sets or individual permissions using Artisan commands.
 
 ## Features
 
 - 🔥 Quickly scaffold CRUD permissions for any resource.
-- ✍️ Create a migration for a single permission with one command.
-- 📦 Compatible with [spatie/laravel-permission](https://github.com/spatie/laravel-permission).
+- ✍️ Generate a migration for a single permission with one command.
+- 📦 Seamlessly integrates with [spatie/laravel-permission](https://github.com/spatie/laravel-permission).
 - 🚀 Clean, minimalistic, and developer-friendly.
-- 🛠️ Customizable stub templates for advanced usage.
+- 🛠️ Fully customizable stub templates for advanced use cases.
 
 ## Installation
 
@@ -23,6 +23,12 @@ Install the package via Composer:
 composer require curly-deni/laravel-permission-maker
 ```
 
+Publish the configuration file:
+
+```bash
+php artisan vendor:publish --tag="permission-maker-config"
+```
+
 Ensure that the Spatie permission migrations are published and migrated:
 
 ```bash
@@ -30,18 +36,65 @@ php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvid
 php artisan migrate
 ```
 
+## Configuration
+
+The configuration file allows you to control which CRUD permissions are automatically generated when using the `permission:commit-crud` command.
+
+Default configuration (`config/permission-maker.php`):
+
+```php
+<?php
+
+return [
+    'create' => [
+        'generate' => true,
+    ],
+    'read' => [
+        'generate' => false,
+    ],
+    'update' => [
+        'generate' => true,
+    ],
+    'delete' => [
+        'generate' => true,
+    ],
+];
+```
+
+### Options
+
+- `create.generate`:  
+  Should the `create` permission be generated?  
+  **Default:** `true`
+
+- `read.generate`:  
+  Should the `read` permission be generated?  
+  **Default:** `false`
+
+- `update.generate`:  
+  Should the `update` permission be generated?  
+  **Default:** `true`
+
+- `delete.generate`:  
+  Should the `delete` permission be generated?  
+  **Default:** `true`
+
+You can adjust these options according to your needs by modifying the published configuration file.
+
+---
+
 ## Usage
 
 | Command                                | Description                                   | Options                              |
 |----------------------------------------|-----------------------------------------------|--------------------------------------|
-| `permission:commit-crud {resource}`    | Create a migration for CRUD permissions       | `--private` `--own`                  |
+| `permission:commit-crud {resource}`    | Create a migration for CRUD permissions       | `--private`, `--own`                 |
 | `permission:commit {name}`             | Create a migration for a single permission    | None                                 |
 
 ---
 
 ### 1. `permission:commit-crud`
 
-Generates standard CRUD permissions (`create`, `update`, `delete`, `read`) for a given resource.
+Generates a set of standard CRUD permissions (`create`, `update`, `delete`, `read`) for a specified resource.
 
 ```bash
 php artisan permission:commit-crud {resource} {--private} {--own}
@@ -49,9 +102,9 @@ php artisan permission:commit-crud {resource} {--private} {--own}
 
 | Argument / Option | Description                                           |
 |-------------------|-------------------------------------------------------|
-| `resource`        | Resource name (preferably in `snake_case`)             |
-| `--private`       | Add `private_read` permission                         |
-| `--own`           | Add own permissions (`own_read`, `own_update`, `own_delete`) |
+| `resource`        | The name of the resource (preferably in `snake_case`). |
+| `--private`       | Add a `private_read` permission.                      |
+| `--own`           | Add "own" permissions: `own_read`, `own_update`, `own_delete`. |
 
 **Example:**
 
@@ -76,7 +129,7 @@ blog_post:own_delete
 
 ### 2. `permission:commit`
 
-Generates a migration for a single permission.
+Generates a migration for a single, custom permission.
 
 ```bash
 php artisan permission:commit {name}
@@ -84,7 +137,7 @@ php artisan permission:commit {name}
 
 | Argument | Description                        |
 |----------|------------------------------------|
-| `name`   | Permission name (e.g., `post:publish`) |
+| `name`   | The name of the permission (e.g., `post:publish`). |
 
 **Example:**
 
@@ -107,4 +160,5 @@ post:publish
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT).  
+Please see [License File](LICENSE.md) for more information.

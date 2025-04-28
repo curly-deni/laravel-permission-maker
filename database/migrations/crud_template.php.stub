@@ -45,12 +45,21 @@ return new class extends Migration
      */
     private function buildPermissions(): array
     {
-        $permissions = [
-            '{{resource}}:create',
-            '{{resource}}:update',
-            '{{resource}}:delete',
-            '{{resource}}:read',
-        ];
+        if ({{create}}) {
+            $permissions[] = '{{resource}}:create';
+        }
+
+        if ({{update}}) {
+            $permissions[] = '{{resource}}:update';
+        }
+
+        if ({{delete}}) {
+            $permissions[] = '{{resource}}:delete';
+        }
+
+        if ({{read}}) {
+            $permissions[] = '{{resource}}:read';
+        }
 
         if ({{private}}) {
             $permissions[] = '{{resource}}:private_read';

@@ -19,6 +19,7 @@ class PermissionMakerServiceProvider extends PackageServiceProvider
         $package
             ->name('laravel-permission-maker')
             ->hasCommand(CommitCRUD::class)
-            ->hasCommand(CommitPermission::class);
+            ->hasCommand(CommitPermission::class)
+            ->hasConfigFile();
     }
 }
